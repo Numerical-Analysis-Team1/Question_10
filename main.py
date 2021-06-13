@@ -5,6 +5,7 @@ from sympy import log
 import sympy as sp
 from sympy.utilities.lambdify import lambdify
 
+# Question 10
 x = sp.symbols('x')
 function = (x * exp(-x) + log(x ** 2)) * ((2 * (x ** 3)) + (2 * (x ** 2)) - 3 * x - 5)
 
