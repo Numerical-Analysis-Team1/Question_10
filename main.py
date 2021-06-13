@@ -5,7 +5,7 @@ import sympy as sp
 from sympy.utilities.lambdify import lambdify
 
 x = sp.symbols('x')
-function = (x * exp(-x) +log(x ** 2)) * ((2 * (x**3)) + (2 * (x**2)) - 3*x - 5)
+function = (x * exp(-x) + log(x ** 2)) * ((2 * (x ** 3)) + (2 * (x ** 2)) - 3 * x - 5)
 
 
 def Newton_Raphson(f, start_point, end_point, epsilon):
@@ -43,7 +43,7 @@ def secant_method(f, start_point, end_point, epsilon):
         print("Not converge.")
         return False
     elif f(round(x1, 3)) != 0:
-        print("Number of interaction : {}".format(count))
+        print("Number of iteration : {}".format(count))
     return round(x1, 4)
 
 
@@ -59,13 +59,13 @@ def ZeroFunction(F, start_point, end_point, epsilon):
             if f(bound) * f(round(bound + 0.1, 1)) < 0:  # There is a section point
                 zero = method(F, bound, round(bound + 0.1, 1), epsilon)
                 if zero is not False:
-                    print("X" + str(numOfZero) + "=", zero)
+                    print("X" + str(numOfZero) + "=" + formate(zero))
                     numOfZero += 1
                     print()
             if f(bound) * f(round(bound + 0.1, 1)) == 0:
                 zero = method(F, bound, round(bound + 0.2, 1), epsilon)
                 if zero is not False:
-                    print("X" + str(numOfZero) + "=", zero)
+                    print("X" + str(numOfZero) + "=" + formate(zero))
                     numOfZero += 1
                     print()
                 bound = round(bound + 0.1, 1)
@@ -76,14 +76,16 @@ def ZeroFunction(F, start_point, end_point, epsilon):
             if f_prime(bound) * f_prime(round(bound + 0.1, 1)) < 0:
                 zero = method(F_prime, bound, round(bound + 0.1, 1), epsilon)
                 if zero is not False and f(zero) == 0:
-                    print("X" + str(numOfZero) + "=", zero)
+                    print("X" + str(numOfZero) + "=" + formate(zero))
                     numOfZero += 1
                     print()
+                else:
+                    print("No more solution.")
             if f_prime(bound) * f_prime(bound + 0.1) == 0:
                 zero = method(F_prime, bound, round(bound + 0.2, 1), epsilon)
                 bound = round(bound + 0.1, 1)
                 if zero is not False and f(zero) == 0:
-                    print("X" + str(numOfZero) + "=", zero)
+                    print("X" + str(numOfZero) + "=" + formate(zero))
                     numOfZero += 1
                     print()
             bound = round(bound + 0.1, 1)
@@ -97,4 +99,23 @@ def ZeroFunction(F, start_point, end_point, epsilon):
     byMethod(secant_method)
 
 
+def Integration_Simpson_Method(f, n, rng):
+    f = lambdify(x, f)
+    a, b = rng[0], rng[1]
+    h = (b - a) / n
+    s = f(a) + f(b)
+    X = a
+    for i in range(0, n - 1):
+        X += h
+        s += 4 * f(X) if i % 2 == 0 else 2 * f(X)
+        print(str((h / 3) * s))
+    print()
+    print("Integration Value by Simpson Method = " + str(round((h / 3) * s),3))
+
+
+def formate(num):
+    return str(round(num, 3)) + "00000" + "14" + "1101"
+
+
 ZeroFunction(function, 0.00001, 1.5, 10 ** -4)
+Integration_Simpson_Method(function, 10, [0.5, 1])
