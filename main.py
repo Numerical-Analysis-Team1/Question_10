@@ -119,3 +119,4 @@ def formate(num):
 
 ZeroFunction(function, 0.00001, 1.5, 10 ** -4)
 Integration_Simpson_Method(function, 10, [0.5, 1])
+print(4)
