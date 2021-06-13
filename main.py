@@ -16,6 +16,7 @@ def Newton_Raphson(f, start_point, end_point, epsilon):
     X = random.uniform(start_point, end_point)
     while abs((X - round((f(X) / f_prime(X)), 4)) - X) > epsilon and f(X) != 0.0 and count < 100:
         X = X - round((f(X) / f_prime(X)), 4)
+        print("{0}) {1} ".format(count, X))
         count += 1
     if count >= 100:
         print("Not converge.")
@@ -36,7 +37,7 @@ def secant_method(f, start_point, end_point, epsilon):
         x_minus1 = X
         X = x1
         x1 = (x_minus1 * f(X) - X * f(x_minus1)) / (f(X) - f(x_minus1))
-        print("{0}) X={1}  Y={2} ".format(count, X, x1))
+        print("{0}) {1} ".format(count, x1))
         count += 1
     if count >= 100:
         print("Not converge.")
