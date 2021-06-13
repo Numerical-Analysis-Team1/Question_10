@@ -1,3 +1,4 @@
+import datetime
 import random
 from sympy import exp
 from sympy import log
@@ -59,13 +60,13 @@ def ZeroFunction(F, start_point, end_point, epsilon):
             if f(bound) * f(round(bound + 0.1, 1)) < 0:  # There is a section point
                 zero = method(F, bound, round(bound + 0.1, 1), epsilon)
                 if zero is not False:
-                    print("X" + str(numOfZero) + "=" + formate(zero))
+                    print("X" + str(numOfZero) + "=" + str(format1(zero)))
                     numOfZero += 1
                     print()
             if f(bound) * f(round(bound + 0.1, 1)) == 0:
                 zero = method(F, bound, round(bound + 0.2, 1), epsilon)
                 if zero is not False:
-                    print("X" + str(numOfZero) + "=" + formate(zero))
+                    print("X" + str(numOfZero) + "=" + str(format1(zero)))
                     numOfZero += 1
                     print()
                 bound = round(bound + 0.1, 1)
@@ -76,7 +77,7 @@ def ZeroFunction(F, start_point, end_point, epsilon):
             if f_prime(bound) * f_prime(round(bound + 0.1, 1)) < 0:
                 zero = method(F_prime, bound, round(bound + 0.1, 1), epsilon)
                 if zero is not False and f(zero) == 0:
-                    print("X" + str(numOfZero) + "=" + formate(zero))
+                    print("X" + str(numOfZero) + "=" + str(format1(zero)))
                     numOfZero += 1
                     print()
                 else:
@@ -85,17 +86,17 @@ def ZeroFunction(F, start_point, end_point, epsilon):
                 zero = method(F_prime, bound, round(bound + 0.2, 1), epsilon)
                 bound = round(bound + 0.1, 1)
                 if zero is not False and f(zero) == 0:
-                    print("X" + str(numOfZero) + "=" + formate(zero))
+                    print("X" + str(numOfZero) + "=" + str(format1(zero)))
                     numOfZero += 1
                     print()
             bound = round(bound + 0.1, 1)
 
     # NEWTON RAPHSON METHOD
-    print("\n*****Newton-Raphson Method*****")
+    print("\n*****Newton-Raphson Method*****\n")
     byMethod(Newton_Raphson)
 
     # SECANT METHOD
-    print("\n*****Secant Method*****")
+    print("\n*****Secant Method*****\n")
     byMethod(secant_method)
 
 
@@ -110,13 +111,51 @@ def Integration_Simpson_Method(f, n, rng):
         s += 4 * f(X) if i % 2 == 0 else 2 * f(X)
         print(str((h / 3) * s))
     print()
-    print("Integration Value by Simpson Method = " + str(round((h / 3) * s),3))
+    print("Integration Value by Simpson Method = " + str(format1((h / 3) * s)))
 
 
-def formate(num):
-    return str(round(num, 3)) + "00000" + "14" + "1101"
+def trapezoidal_method(f, n, rng):
+    a, b = rng
+    h = (b - a) / n
+    x = a
+    s = 0
+
+    for i in range(n):
+        s += (f(x) + f(x + h)) / 2
+        x += h
+
+    return s * h
+
+
+def Integration_Romberg_method(f, n, rng):
+    f = lambdify(x, f)
+    r = [[0 for j in range(i)] for i in range(1, n + 1)]
+
+    for i in range(0, n):
+        r[i][0] = trapezoidal_method(f, i + 1, rng)
+
+    for i in range(1, n):
+        for j in range(1, i + 1):
+            r[i][j] = r[i][j - 1] + 1/(4 ** j - 1) * (r[i][j - 1] - r[i - 1][j - 1])
+
+    for row in r:
+        print(row)
+    print("Integration Value by Romberg Method = " + str(format1(r[n-1][n-1])))
+
+
+def format1(number):
+    t = round(number, 3)
+    now = datetime.datetime.now()
+    s = str(t) + "00000" + str(now.day) + str(now.hour) + str(now.minute)
+    new = float(s)
+    return new
 
 
 ZeroFunction(function, 0.00001, 1.5, 10 ** -4)
+
+print("\n*****Simpson Method*****\n")
 Integration_Simpson_Method(function, 10, [0.5, 1])
-print(4)
+
+print("\n*****Romberg Method*****\n")
+Integration_Romberg_method(function, 10, [0.5, 1])
+
